@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script
+        src="http://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous">
+    </script>
+</head>
+<body>
+    <div>
+        <input id="first">
+        <select id="second">
+            <option value="1">+</option>
+            <option value="2">-</option>
+            <option value="3">*</option>
+            <option value="4">/</option>
+        </select>
+        <input id="third">
+        <button onclick="send2()">계산</button>
+        <div id="display-response">결과</div>
+    </div>
+
+    <script>
+        async function send2() {//async = 비동기
+            let one = $('#first').val().trim();
+            let two = $('#second').val().trim();
+            let three = $('#third').val().trim();
+            if (one == '' || three === '') {
+                $('#display-response').html('쓰고 하세요');
+                return;
+            }
+            try{
+                console.log(`${one} ${two} ${three}`);
+                let response = await $.get("/greeting/" + one + "/" + two + "/" + three);//await = 결과가 올 때 까지 대기
+                $('#display-response').html(JSON.stringify(response));
+            }
+            catch (err) {
+                $('#display-response').html(JSON.stringify(err));
+            }
+            finally {
+                $('#display-response').html($('#display-response').html()+'<br>항상 실행');
+            }
+        }
+
+        function send() {
+            let one = $('#first').val().trim();
+            let two = $('#second').val().trim();
+            let threee = $('#third').val().trim();
+            if(one==''||three==''){
+                $('#display-response').html("입력해주세요");
+                return;
+            }
+            $.ajax({
+                url:"/greeting/" + one + "/" + two + "/" + three,
+                type:'GET',
+                async:true,
+                success:function (response) {
+                    $('#display-response').html(JSON.stringify(response));
+                },
+                error: function (err) {
+                    $('#display-response').html(JSON.stringify(err));
+                }
+            });
+        }
+    </script>
+</body>
+</html>
